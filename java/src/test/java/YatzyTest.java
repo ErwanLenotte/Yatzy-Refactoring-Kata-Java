@@ -1,15 +1,30 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class YatzyTest {
+    private static final String CHANCES_FilE ="src/test/resources/chance-sum-all-dice.txt";
+    private static List<Integer> CHANCES_EXCEPTED;
+
+    @BeforeAll
+    public static void load_file_result() throws IOException {
+        CHANCES_EXCEPTED = readFileToGetExcepted(CHANCES_FilE);
+    }
 
     @Test
+    @DisplayName("Chance : sum of all dice")
     public void chance_scores_sum_of_all_dice() {
-        int expected = 15;
-        int actual = Yatzy.chance(2,3,4,5,1);
-        assertEquals(expected, actual);
-        assertEquals(16, Yatzy.chance(3,3,4,5,1));
+        var actual = List.of(Yatzy.chance(2, 3, 4, 5, 1), Yatzy.chance(3,3,4,5,1));
+        assertEquals(CHANCES_EXCEPTED, actual);
     }
 
     @Test public void yatzy_scores_50() {
@@ -108,4 +123,11 @@ public class YatzyTest {
         assertEquals(18, Yatzy.fullHouse(6,2,2,2,6));
         assertEquals(0, Yatzy.fullHouse(2,3,4,5,6));
     }
+
+
+    private static List<Integer> readFileToGetExcepted(String filePath) throws IOException {
+        return Files.readAllLines(Paths.get(filePath), StandardCharsets.UTF_8)
+            .stream().map(Integer::parseInt).collect(Collectors.toList());
+    }
+
 }
