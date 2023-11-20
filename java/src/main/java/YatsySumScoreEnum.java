@@ -1,6 +1,6 @@
 import java.util.function.Predicate;
 
-public enum YatsyScoreTypeEnum {
+public enum YatsySumScoreEnum {
     ONES( dice -> dice == 1),
     TWOS(dice -> dice == 2),
     THREES(dice -> dice == 3),
@@ -16,7 +16,7 @@ public enum YatsyScoreTypeEnum {
 
     private final Predicate<Integer> predicate;
 
-    YatsyScoreTypeEnum(Predicate<Integer> predicate) {
+    YatsySumScoreEnum(Predicate<Integer> predicate) {
         this.predicate = predicate;
     }
 }
