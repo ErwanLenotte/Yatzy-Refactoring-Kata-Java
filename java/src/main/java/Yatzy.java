@@ -4,11 +4,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Yatzy {
-
-
-    public static final int FIVES_VALUE = 5;
-    public static final int SIXES_VALUE = 6;
-    public static final int ONES_VALUE = 1;
     private static final int DEFAULT_SCORE = 0;
     private static final int PAIR_VALUE = 2;
     private static final int PAIR_TALLIES = 2;
@@ -24,18 +19,39 @@ public class Yatzy {
     private static final int LARGE_STRAIGHT_SCORE = 20;
     private static final int NB_TALLIES_STRAIGHT = 1;
     private static final int MIN_DICE_LARGE_STRAIGHT = 1;
-    private static final int TWOS_VALUE = 2;
-    private static final int THREES_VALUE = 3;
-    private static final int FOURS_VALUE = 4;
+
 
     public static int chance(int d1, int d2, int d3, int d4, int d5) {
-        return Stream.of(d1, d2, d3, d4, d5).reduce(DEFAULT_SCORE, Integer::sum);
+        return sumDiceWithFilter(d2, d1, d3, d4, d5, YatsyScoreTypeEnum.CHANCE);
+    }
+    
+    public static int ones(int d1, int d2, int d3, int d4, int d5) {
+        return sumDiceWithFilter(d2, d1, d3, d4, d5, YatsyScoreTypeEnum.ONES);
+    }
+    
+    public static int twos(int d1, int d2, int d3, int d4, int d5) {
+        return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsyScoreTypeEnum.TWOS);
+    }
+
+    public static int threes(int d1, int d2, int d3, int d4, int d5) {
+        return sumDiceWithFilter(d1, d2, d3, d4, d5,YatsyScoreTypeEnum.THREES);
+    }
+
+
+    public static int fours(int d1, int d2, int d3, int d4, int d5) {
+        return sumDiceWithFilter(d1, d2, d3, d4, d5,YatsyScoreTypeEnum.FOURS);
+    }
+
+    public static int fives(int d1, int d2, int d3, int d4, int d5) {
+        return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsyScoreTypeEnum.FIVES);
+    }
+
+    public static int sixes(int d1, int d2, int d3, int d4, int d5) {
+        return sumDiceWithFilter(d1, d2, d3, d4, d5,YatsyScoreTypeEnum.SIXES);
     }
 
     public static int yatzy(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
-            Function.identity(),
-            Collectors.counting()));
+        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
 
         return tallies.entrySet().stream()
             .filter(entry -> entry.getValue() >= YATSY_VALUE)
@@ -44,35 +60,8 @@ public class Yatzy {
             .orElse(DEFAULT_SCORE);
     }
 
-    public static int ones(int d1, int d2, int d3, int d4, int d5) {
-        return Stream.of(d1, d2, d3, d4, d5).filter(dice -> dice == ONES_VALUE).reduce(DEFAULT_SCORE, Integer::sum);
-    }
-
-    public static int twos(int d1, int d2, int d3, int d4, int d5) {
-        return Stream.of(d1, d2, d3, d4, d5).filter(dice -> dice == TWOS_VALUE).reduce(DEFAULT_SCORE, Integer::sum);
-    }
-
-    public static int threes(int d1, int d2, int d3, int d4, int d5) {
-        return Stream.of(d1, d2, d3, d4, d5).filter(dice -> dice == THREES_VALUE).reduce(DEFAULT_SCORE, Integer::sum);
-    }
-
-
-    public static int fours(int d1, int d2, int d3, int d4, int d5) {
-        return Stream.of(d1, d2, d3, d4, d5).filter(dice -> dice == FOURS_VALUE).reduce(DEFAULT_SCORE, Integer::sum);
-    }
-
-    public static int fives(int d1, int d2, int d3, int d4, int d5) {
-        return Stream.of(d1, d2, d3, d4, d5).filter(dice -> dice == FIVES_VALUE).reduce(DEFAULT_SCORE, Integer::sum);
-    }
-
-    public static int sixes(int d1, int d2, int d3, int d4, int d5) {
-        return Stream.of(d1, d2, d3, d4, d5).filter(dice -> dice == SIXES_VALUE).reduce(DEFAULT_SCORE, Integer::sum);
-    }
-
     public static int scorePair(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
-            Function.identity(),
-            Collectors.counting()));
+        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
 
         return tallies.entrySet().stream()
             .filter(entry -> entry.getValue() >= PAIR_TALLIES)
@@ -82,9 +71,7 @@ public class Yatzy {
     }
 
     public static int twoPair(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
-            Function.identity(),
-            Collectors.counting()));
+        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
 
         return tallies.entrySet().stream()
             .filter(entry -> entry.getValue() >= PAIR_VALUE)
@@ -94,9 +81,7 @@ public class Yatzy {
 
 
     public static int threeOfAKind(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
-            Function.identity(),
-            Collectors.counting()));
+        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
 
         return tallies.entrySet().stream()
             .filter(entry -> entry.getValue() >= TRIPLET_TALLIES)
@@ -107,9 +92,7 @@ public class Yatzy {
 
 
     public static int fourOfAKind(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
-            Function.identity(),
-            Collectors.counting()));
+        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
 
         return tallies.entrySet().stream()
             .filter(entry -> entry.getValue() >= QUADRUPLET_TALLIES)
@@ -120,9 +103,7 @@ public class Yatzy {
 
 
     public static int smallStraight(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
-            Function.identity(),
-            Collectors.counting()));
+        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
 
         if (tallies.entrySet().stream()
             .filter(entry -> entry.getValue() == NB_TALLIES_STRAIGHT && entry.getKey() <= MAX_DICE_SMALL_STRAIGHT)
@@ -132,9 +113,7 @@ public class Yatzy {
     }
 
     public static int largeStraight(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
-            Function.identity(),
-            Collectors.counting()));
+        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
 
         if (tallies.entrySet().stream()
             .filter(entry -> entry.getValue() == NB_TALLIES_STRAIGHT && entry.getKey() > MIN_DICE_LARGE_STRAIGHT)
@@ -145,9 +124,7 @@ public class Yatzy {
 
     public static int fullHouse(int d1, int d2, int d3, int d4, int d5) {
 
-        Map<Integer, Long> tallies = Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
-            Function.identity(),
-            Collectors.counting()));
+        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
 
         var pairTotal = tallies.entrySet().stream()
             .filter(entry -> entry.getValue() >= PAIR_TALLIES)
@@ -166,6 +143,17 @@ public class Yatzy {
 
         return DEFAULT_SCORE;
     }
+
+    private static Integer sumDiceWithFilter(int d2, int d1, int d3, int d4, int d5, YatsyScoreTypeEnum scoreTypeEnum) {
+        return Stream.of(d1, d2, d3, d4, d5).filter(scoreTypeEnum.getPredicate()).reduce(DEFAULT_SCORE, Integer::sum);
+    }
+
+    private static Map<Integer, Long> countTallies(int d1, int d2, int d3, int d4, int d5) {
+        return Stream.of(d1, d2, d3, d4, d5).collect(Collectors.groupingBy(
+            Function.identity(),
+            Collectors.counting()));
+    }
+
 
 }
 
