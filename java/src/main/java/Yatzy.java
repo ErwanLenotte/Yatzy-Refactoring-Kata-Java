@@ -7,75 +7,71 @@ import java.util.stream.Stream;
 public class Yatzy {
     private static final int DEFAULT_SCORE = 0;
 
-    public static int chance(int d1, int d2, int d3, int d4, int d5) {
-        return sumDiceWithFilter(d2, d1, d3, d4, d5, YatsySumScoreEnum.CHANCE);
+    public static int score(int d1, int d2, int d3, int d4, int d5, YatsyTypeEnum yatsyTypeEnum) {
+
+        int score = DEFAULT_SCORE;
+
+        switch (yatsyTypeEnum) {
+            case ONES:
+                score = scoreSumDices(d2, d1, d3, d4, d5, YatsySumScoreEnum.ONES);
+                break;
+            case TWOS:
+                score = scoreSumDices(d2, d1, d3, d4, d5, YatsySumScoreEnum.TWOS);
+                break;
+            case THREES:
+                score = scoreSumDices(d2, d1, d3, d4, d5, YatsySumScoreEnum.THREES);
+                break;
+            case FOURS:
+                score = scoreSumDices(d2, d1, d3, d4, d5, YatsySumScoreEnum.FOURS);
+                break;
+            case FIVES:
+                score = scoreSumDices(d2, d1, d3, d4, d5, YatsySumScoreEnum.FIVES);
+                break;
+            case SIXES:
+                score = scoreSumDices(d2, d1, d3, d4, d5, YatsySumScoreEnum.SIXES);
+                break;
+            case CHANCE:
+                score = scoreSumDices(d2, d1, d3, d4, d5, YatsySumScoreEnum.CHANCE);
+                break;
+            case PAIR:
+                score = scoreTallies(d1, d2, d3, d4, d5, YatsyTalliesScoreEnum.PAIR);
+                break;
+            case TWO_PAIRS:
+                score = scoreTallies(d1, d2, d3, d4, d5, YatsyTalliesScoreEnum.TWO_PAIRS);
+                break;
+            case THREE_OF_A_KIND:
+                score = scoreTallies(d1, d2, d3, d4, d5, YatsyTalliesScoreEnum.THREE_OF_A_KIND);
+                break;
+            case FOUR_OF_A_KIND:
+                score = scoreTallies(d1, d2, d3, d4, d5, YatsyTalliesScoreEnum.FOUR_OF_A_KIND);
+                break;
+            case SMALL_STRAIGHT:
+                score = scoreStraight(d1, d2, d3, d4, d5, YastySraightScoreEnum.SMALL_STRAIGHT);
+                break;
+            case LARGE_STRAIGHT:
+                score = scoreStraight(d1, d2, d3, d4, d5, YastySraightScoreEnum.LARGE_STRAIGHT);
+                break;
+            case YATSY:
+                score = scoreTallies(d1, d2, d3, d4, d5, YatsyTalliesScoreEnum.YATSY);
+                break;
+            case FULL_HOUSE:
+                score = scoreFullHouse(d1, d2, d3, d4, d5);
+        }
+
+        return score;
     }
 
-    public static int ones(int d1, int d2, int d3, int d4, int d5) {
-        return sumDiceWithFilter(d2, d1, d3, d4, d5, YatsySumScoreEnum.ONES);
+    private static int scoreStraight(int d1, int d2, int d3, int d4, int d5, YastySraightScoreEnum yastySraightScoreEnum) {
+        return Stream.of(countTallies(d1, d2, d3, d4, d5)).mapToInt(tallies -> calculateStraightFromTallies(tallies, yastySraightScoreEnum)).findFirst().orElse(DEFAULT_SCORE);
     }
 
-    public static int twos(int d1, int d2, int d3, int d4, int d5) {
-        return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsySumScoreEnum.TWOS);
+    private static int scoreTallies(int d1, int d2, int d3, int d4, int d5, YatsyTalliesScoreEnum yatsyTalliesScoreEnum) {
+        return Stream.of(countTallies(d1, d2, d3, d4, d5)).mapToInt(tallies -> calculateScoreFromTallies(tallies, yatsyTalliesScoreEnum)).findFirst().orElse(DEFAULT_SCORE);
     }
 
-    public static int threes(int d1, int d2, int d3, int d4, int d5) {
-        return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsySumScoreEnum.THREES);
-    }
-    
-    public static int fours(int d1, int d2, int d3, int d4, int d5) {
-        return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsySumScoreEnum.FOURS);
-    }
-
-    public static int fives(int d1, int d2, int d3, int d4, int d5) {
-        return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsySumScoreEnum.FIVES);
-    }
-
-    public static int sixes(int d1, int d2, int d3, int d4, int d5) {
-        return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsySumScoreEnum.SIXES);
-    }
-
-    public static int yatzy(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-        return calculateScoreFromTallies(tallies, YatsyTalliesScoreEnum.YATSY);
-    }
-
-    public static int scorePair(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-        return calculateScoreFromTallies(tallies, YatsyTalliesScoreEnum.PAIR);
-    }
-
-    public static int twoPair(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-        return calculateScoreFromTallies(tallies, YatsyTalliesScoreEnum.TWO_PAIRS);
-    }
-
-
-    public static int threeOfAKind(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-        return calculateScoreFromTallies(tallies, YatsyTalliesScoreEnum.THREE_OF_A_KIND);
-    }
-
-
-    public static int fourOfAKind(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-        return calculateScoreFromTallies(tallies, YatsyTalliesScoreEnum.FOUR_OF_A_KIND);
-    }
-
-
-    public static int smallStraight(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-        return calculateStraightFromTallies(tallies, YastySraightScoreEnum.SMALL_STRAIGHT);
-    }
-
-    public static int largeStraight(int d1, int d2, int d3, int d4, int d5) {
-        Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-        return calculateStraightFromTallies(tallies, YastySraightScoreEnum.LARGE_STRAIGHT);
-    }
-
-    public static int fullHouse(int d1, int d2, int d3, int d4, int d5) {
-        var pairTotal = scorePair(d1, d2, d3, d4, d5);
-        var tripletTotal = threeOfAKind(d1, d2, d3, d4, d5);
+    private static int scoreFullHouse(int d1, int d2, int d3, int d4, int d5) {
+        var pairTotal = scoreTallies(d2, d1, d3, d4, d5, YatsyTalliesScoreEnum.PAIR);
+        var tripletTotal = scoreTallies(d1, d2, d3, d4, d5, YatsyTalliesScoreEnum.THREE_OF_A_KIND);
 
         if (pairTotal != DEFAULT_SCORE && tripletTotal != DEFAULT_SCORE)
             return pairTotal + tripletTotal;
@@ -83,7 +79,7 @@ public class Yatzy {
         return DEFAULT_SCORE;
     }
 
-    private static Integer sumDiceWithFilter(int d2, int d1, int d3, int d4, int d5, YatsySumScoreEnum scoreEnum) {
+    private static Integer scoreSumDices(int d2, int d1, int d3, int d4, int d5, YatsySumScoreEnum scoreEnum) {
         return Stream.of(d1, d2, d3, d4, d5).filter(scoreEnum.getPredicate()).reduce(DEFAULT_SCORE, Integer::sum);
     }
 
@@ -111,8 +107,4 @@ public class Yatzy {
             return scoreEnum.getStraightScore();
         return DEFAULT_SCORE;
     }
-
 }
-
-
-
