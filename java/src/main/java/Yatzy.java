@@ -1,5 +1,4 @@
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -8,9 +7,10 @@ public class Yatzy {
     private static final int DEFAULT_SCORE = 0;
 
     public static int score(int d1, int d2, int d3, int d4, int d5, YatsyTypeEnum yatsyTypeEnum) {
+        Objects.requireNonNull(yatsyTypeEnum, "yatsyTypeEnum can't be null");
+        checkDicesBoundaries(d1, d2, d3, d4, d5);
 
         int score = DEFAULT_SCORE;
-
         switch (yatsyTypeEnum) {
             case ONES:
                 score = scoreSumDices(d2, d1, d3, d4, d5, YatsySumScoreEnum.ONES);
@@ -59,6 +59,14 @@ public class Yatzy {
         }
 
         return score;
+    }
+
+    private static void checkDicesBoundaries(int d1, int d2, int d3, int d4, int d5) {
+        List<Integer> dices = Arrays.asList(d1, d2, d3, d4, d5);
+
+        for (int i = 0; i < dices.size(); i++)
+            if (dices.get(i) < 0 || dices.get(i) > 6)
+                throw new IllegalArgumentException(String.format("d%d must be between 1 and 6", (i + 1)));
     }
 
     private static int scoreStraight(int d1, int d2, int d3, int d4, int d5, YastySraightScoreEnum yastySraightScoreEnum) {

@@ -1,11 +1,110 @@
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class YatzyTest {
+
+    @Test
+    void when_yatsy_score_type_is_null_should_throw_NullPointerException() {
+        var nullPointerException = assertThrows(NullPointerException.class,
+            () -> Yatzy.score(1, 1, 1, 1, 1, null));
+
+        assertEquals("yatsyTypeEnum can't be null", nullPointerException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d1 is negative")
+    void when_yatsy_d1_is_negative_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(-1, 1, 1, 1, 1, YatsyTypeEnum.YATSY));
+
+        assertEquals("d1 must be between 1 and 6", illegalArgumentException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d1 is negative")
+    void when_yatsy_d1_is_greater_than_six_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(7, 1, 1, 1, 1, YatsyTypeEnum.YATSY));
+        assertEquals("d1 must be between 1 and 6", illegalArgumentException.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d2 is negative")
+    void when_yatsy_d2_is_negative_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(1, -1, 1, 1, 1, YatsyTypeEnum.YATSY));
+        assertEquals("d2 must be between 1 and 6", illegalArgumentException.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d2 is greater than six")
+    void when_yatsy_d2_is_greater_than_six_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(1, 7, 1, 1, 1, YatsyTypeEnum.YATSY));
+        assertEquals("d2 must be between 1 and 6", illegalArgumentException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d3 is negative")
+    void when_yatsy_d3_is_negative_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(1, 1, -1, 1, 1, YatsyTypeEnum.YATSY));
+        assertEquals("d3 must be between 1 and 6", illegalArgumentException.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d3 is greater than six")
+    void when_yatsy_d3_is_greater_than_six_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(1, 1, 7, 1, 1, YatsyTypeEnum.YATSY));
+
+        assertEquals("d3 must be between 1 and 6", illegalArgumentException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d4 is negative")
+    void when_yatsy_d4_is_negative_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(1, 1, -1, 1, 1, YatsyTypeEnum.YATSY));
+
+        assertEquals("d3 must be between 1 and 6", illegalArgumentException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d4 is greater than six")
+    void when_yatsy_d4_is_greater_than_six_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(1, 1, 1, 7, 1, YatsyTypeEnum.YATSY));
+
+        assertEquals("d4 must be between 1 and 6", illegalArgumentException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d5 is negative")
+    void when_yatsy_d5_is_negative_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(1, 1, 1, 1, -1, YatsyTypeEnum.YATSY));
+
+        assertEquals("d5 must be between 1 and 6", illegalArgumentException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when d5 is greater than six")
+    void when_yatsy_d5_is_greater_than_six_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
+            () -> Yatzy.score(6, 1, 1, 1, 7, YatsyTypeEnum.YATSY));
+
+        assertEquals("d5 must be between 1 and 6", illegalArgumentException.getMessage());
+    }
 
     @ParameterizedTest
     @DisplayName("Chance : sum of all dice")
