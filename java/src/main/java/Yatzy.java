@@ -1,3 +1,4 @@
+import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -5,7 +6,6 @@ import java.util.stream.Stream;
 
 public class Yatzy {
     private static final int DEFAULT_SCORE = 0;
-    private static final int PAIR_VALUE = 2;
 
     public static int chance(int d1, int d2, int d3, int d4, int d5) {
         return sumDiceWithFilter(d2, d1, d3, d4, d5, YatsySumScoreEnum.CHANCE);
@@ -49,11 +49,7 @@ public class Yatzy {
 
     public static int twoPair(int d1, int d2, int d3, int d4, int d5) {
         Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-
-        return tallies.entrySet().stream()
-            .filter(entry -> entry.getValue() >= PAIR_VALUE)
-            .map(entry -> entry.getKey() * PAIR_VALUE)
-            .reduce(DEFAULT_SCORE, Integer::sum);
+        return calculateScoreFromTallies(tallies, YatsyTalliesScoreEnum.TWO_PAIRS);
     }
 
 
@@ -91,8 +87,8 @@ public class Yatzy {
         return DEFAULT_SCORE;
     }
 
-    private static Integer sumDiceWithFilter(int d2, int d1, int d3, int d4, int d5, YatsySumScoreEnum scoreTypeEnum) {
-        return Stream.of(d1, d2, d3, d4, d5).filter(scoreTypeEnum.getPredicate()).reduce(DEFAULT_SCORE, Integer::sum);
+    private static Integer sumDiceWithFilter(int d2, int d1, int d3, int d4, int d5, YatsySumScoreEnum scoreEnum) {
+        return Stream.of(d1, d2, d3, d4, d5).filter(scoreEnum.getPredicate()).reduce(DEFAULT_SCORE, Integer::sum);
     }
 
     private static Map<Integer, Long> countTallies(int d1, int d2, int d3, int d4, int d5) {
@@ -101,12 +97,14 @@ public class Yatzy {
             Collectors.counting()));
     }
 
-    private static Integer calculateScoreFromTallies(Map<Integer, Long> tallies, YatsyTalliesScoreEnum scoreTypeEnum) {
+    private static Integer calculateScoreFromTallies(Map<Integer, Long> tallies, YatsyTalliesScoreEnum scoreEnum) {
         return tallies.entrySet().stream()
-            .filter(scoreTypeEnum.getTalliesPredicate())
-            .max(Map.Entry.comparingByKey())
-            .map(scoreTypeEnum.getCalculeScoreFunction())
-            .orElse(DEFAULT_SCORE);
+            .filter(scoreEnum.getTalliesPredicate())
+            .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+            .limit(scoreEnum.getNbCount())
+            .map(Map.Entry::getKey)
+            .map(scoreEnum.getCalculeScoreFunction())
+            .reduce(DEFAULT_SCORE,Integer::sum);
     }
 
     private static int calculateStraightFromTallies(Map<Integer, Long> tallies,YastySraightScoreEnum scoreEnum) {
