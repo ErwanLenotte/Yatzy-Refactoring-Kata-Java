@@ -10,11 +10,11 @@ public class Yatzy {
     public static int chance(int d1, int d2, int d3, int d4, int d5) {
         return sumDiceWithFilter(d2, d1, d3, d4, d5, YatsySumScoreEnum.CHANCE);
     }
-    
+
     public static int ones(int d1, int d2, int d3, int d4, int d5) {
         return sumDiceWithFilter(d2, d1, d3, d4, d5, YatsySumScoreEnum.ONES);
     }
-    
+
     public static int twos(int d1, int d2, int d3, int d4, int d5) {
         return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsySumScoreEnum.TWOS);
     }
@@ -22,8 +22,7 @@ public class Yatzy {
     public static int threes(int d1, int d2, int d3, int d4, int d5) {
         return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsySumScoreEnum.THREES);
     }
-
-
+    
     public static int fours(int d1, int d2, int d3, int d4, int d5) {
         return sumDiceWithFilter(d1, d2, d3, d4, d5, YatsySumScoreEnum.FOURS);
     }
@@ -38,7 +37,6 @@ public class Yatzy {
 
     public static int yatzy(int d1, int d2, int d3, int d4, int d5) {
         Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-
         return calculateScoreFromTallies(tallies, YatsyTalliesScoreEnum.YATSY);
     }
 
@@ -61,7 +59,6 @@ public class Yatzy {
 
     public static int fourOfAKind(int d1, int d2, int d3, int d4, int d5) {
         Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-
         return calculateScoreFromTallies(tallies, YatsyTalliesScoreEnum.FOUR_OF_A_KIND);
     }
 
@@ -73,11 +70,10 @@ public class Yatzy {
 
     public static int largeStraight(int d1, int d2, int d3, int d4, int d5) {
         Map<Integer, Long> tallies = countTallies(d1, d2, d3, d4, d5);
-        return calculateStraightFromTallies(tallies,YastySraightScoreEnum.LARGE_STRAIGHT);
+        return calculateStraightFromTallies(tallies, YastySraightScoreEnum.LARGE_STRAIGHT);
     }
 
     public static int fullHouse(int d1, int d2, int d3, int d4, int d5) {
-
         var pairTotal = scorePair(d1, d2, d3, d4, d5);
         var tripletTotal = threeOfAKind(d1, d2, d3, d4, d5);
 
@@ -104,10 +100,10 @@ public class Yatzy {
             .limit(scoreEnum.getNbCount())
             .map(Map.Entry::getKey)
             .map(scoreEnum.getCalculeScoreFunction())
-            .reduce(DEFAULT_SCORE,Integer::sum);
+            .reduce(DEFAULT_SCORE, Integer::sum);
     }
 
-    private static int calculateStraightFromTallies(Map<Integer, Long> tallies,YastySraightScoreEnum scoreEnum) {
+    private static int calculateStraightFromTallies(Map<Integer, Long> tallies, YastySraightScoreEnum scoreEnum) {
         if (tallies.entrySet().stream()
             .filter(scoreEnum.getStraightPredicate())
             .filter(entry -> entry.getValue() == YastySraightScoreEnum.NB_TALLIES_STRAIGHT)
