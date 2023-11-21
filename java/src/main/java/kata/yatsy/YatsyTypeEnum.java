@@ -1,3 +1,5 @@
+package kata.yatsy;
+
 public enum YatsyTypeEnum {
     ONES,
     TWOS,

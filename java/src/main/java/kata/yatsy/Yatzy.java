@@ -1,3 +1,5 @@
+package kata.yatsy;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -5,6 +7,9 @@ import java.util.stream.Stream;
 
 public class Yatzy {
     private static final int DEFAULT_SCORE = 0;
+
+    private Yatzy() {
+    }
 
     public static int score(int d1, int d2, int d3, int d4, int d5, YatsyTypeEnum yatsyTypeEnum) {
         Objects.requireNonNull(yatsyTypeEnum, "yatsyTypeEnum can't be null");

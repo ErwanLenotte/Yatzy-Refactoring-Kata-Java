@@ -1,6 +1,9 @@
+package kata.yatsy;
+
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 public enum YatsyTalliesScoreEnum {
 
@@ -13,9 +16,9 @@ public enum YatsyTalliesScoreEnum {
     private final Function<Integer, Integer> calculeScoreFunction;
     private final int nbCount;
 
-    YatsyTalliesScoreEnum(Predicate<Map.Entry<Integer, Long>> talliesPredicate, Function<Integer, Integer> calculeScoreFunction, int nbCount) {
+    YatsyTalliesScoreEnum(Predicate<Map.Entry<Integer, Long>> talliesPredicate, UnaryOperator<Integer> calculateScoreOperation, int nbCount) {
         this.talliesPredicate = talliesPredicate;
-        this.calculeScoreFunction = calculeScoreFunction;
+        this.calculeScoreFunction = calculateScoreOperation;
         this.nbCount = nbCount;
     }
 

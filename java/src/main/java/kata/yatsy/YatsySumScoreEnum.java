@@ -1,3 +1,5 @@
+package kata.yatsy;
+
 import java.util.function.Predicate;
 
 public enum YatsySumScoreEnum {
