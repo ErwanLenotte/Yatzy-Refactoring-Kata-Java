@@ -11,7 +11,7 @@ public class Yatzy {
     private static final int DEFAULT_SCORE = 0;
 
 
-    private static final  Map<YatzyTypeEnum, YatzySumScoreEnum> scoreSumDiceMap = Map.of(
+    private static final Map<YatzyTypeEnum, YatzySumScoreEnum> scoreSumDiceMap = Map.of(
         ONES, YatzySumScoreEnum.ONES,
         TWOS, YatzySumScoreEnum.TWOS,
         THREES, YatzySumScoreEnum.THREES,
@@ -21,7 +21,7 @@ public class Yatzy {
         CHANCE, YatzySumScoreEnum.CHANCE
     );
 
-    private static final  Map<YatzyTypeEnum, YatzyTalliesScoreEnum> scoreTalliesMap = Map.of(
+    private static final Map<YatzyTypeEnum, YatzyTalliesScoreEnum> scoreTalliesMap = Map.of(
         PAIR, YatzyTalliesScoreEnum.PAIR,
         TWO_PAIRS, YatzyTalliesScoreEnum.TWO_PAIRS,
         THREE_OF_A_KIND, YatzyTalliesScoreEnum.THREE_OF_A_KIND,
@@ -29,18 +29,19 @@ public class Yatzy {
         YATZY, YatzyTalliesScoreEnum.YATZY
     );
 
-    private static final  Map<YatzyTypeEnum, YaztySraightScoreEnum> scoreStraightMap = Map.of(
+    private static final Map<YatzyTypeEnum, YaztySraightScoreEnum> scoreStraightMap = Map.of(
         SMALL_STRAIGHT, YaztySraightScoreEnum.SMALL_STRAIGHT,
         LARGE_STRAIGHT, YaztySraightScoreEnum.LARGE_STRAIGHT
     );
-
 
 
     private Yatzy() {
     }
 
     public static int score(int d1, int d2, int d3, int d4, int d5, YatzyTypeEnum yatzyTypeEnum) {
-        Objects.requireNonNull(yatzyTypeEnum, "yatzyTypeEnum can't be null");
+
+        checkYatzyTypeEnum(yatzyTypeEnum);
+
         checkDicesBoundaries(d1, d2, d3, d4, d5);
 
         return
@@ -54,6 +55,12 @@ public class Yatzy {
                 case FULL_HOUSE -> scoreFullHouse(d1, d2, d3, d4, d5);
             };
 
+    }
+
+    private static void checkYatzyTypeEnum(YatzyTypeEnum yatzyTypeEnum) {
+        if (yatzyTypeEnum == null) {
+            throw new IllegalArgumentException("yatzyTypeEnum can't be null");
+        }
     }
 
     private static void checkDicesBoundaries(int d1, int d2, int d3, int d4, int d5) {

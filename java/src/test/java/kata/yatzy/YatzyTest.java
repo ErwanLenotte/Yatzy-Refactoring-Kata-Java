@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class YatzyTest {
 
     @Test
-    void when_yatzy_score_type_is_null_should_throw_NullPointerException() {
-        var nullPointerException = assertThrows(NullPointerException.class,
+    void when_yatzy_score_type_is_null_should_throw_IllegalArgumentException() {
+        var illegalArgumentException = assertThrows(IllegalArgumentException.class,
             () -> Yatzy.score(1, 1, 1, 1, 1, null));
 
-        assertEquals("yatzyTypeEnum can't be null", nullPointerException.getMessage());
+        assertEquals("yatzyTypeEnum can't be null", illegalArgumentException.getMessage());
     }
 
     @Test
