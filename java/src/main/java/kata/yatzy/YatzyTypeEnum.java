@@ -1,6 +1,7 @@
-package kata.yatsy;
+package kata.yatzy;
 
-public enum YatsyTypeEnum {
+
+public enum YatzyTypeEnum {
     ONES,
     TWOS,
     THREES,
@@ -14,5 +15,6 @@ public enum YatsyTypeEnum {
     FOUR_OF_A_KIND,
     SMALL_STRAIGHT,
     LARGE_STRAIGHT,
-    YATSY, FULL_HOUSE
+    YATZY,
+    FULL_HOUSE
 }

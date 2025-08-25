@@ -1,9 +1,9 @@
-package kata.yatsy;
+package kata.yatzy;
 
 import java.util.Map;
 import java.util.function.Predicate;
 
-public enum YastySraightScoreEnum {
+public enum YaztySraightScoreEnum {
 
 
     SMALL_STRAIGHT(entry -> entry.getKey() <= 5, 15),
@@ -14,7 +14,7 @@ public enum YastySraightScoreEnum {
     private final Predicate<Map.Entry<Integer, Long>> straightPredicate;
     private final int straightScore;
 
-    YastySraightScoreEnum(Predicate<Map.Entry<Integer, Long>> straightPredicate, int straightScore) {
+    YaztySraightScoreEnum(Predicate<Map.Entry<Integer, Long>> straightPredicate, int straightScore) {
         this.straightPredicate = straightPredicate;
         this.straightScore = straightScore;
     }
