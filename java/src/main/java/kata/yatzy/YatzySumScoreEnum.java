@@ -1,6 +1,6 @@
 package kata.yatzy;
 
-import java.util.function.Predicate;
+import java.util.function.IntPredicate;
 
 public enum YatzySumScoreEnum {
     ONES(dice -> dice == 1),
@@ -11,13 +11,13 @@ public enum YatzySumScoreEnum {
     SIXES(dice -> dice == 6),
     CHANCE(_ -> true);
 
-    private final Predicate<Integer> predicate;
+    private final IntPredicate predicate;
 
-    YatzySumScoreEnum(Predicate<Integer> predicate) {
+    YatzySumScoreEnum(IntPredicate predicate) {
         this.predicate = predicate;
     }
 
-    public Predicate<Integer> getPredicate() {
+    public IntPredicate getPredicate() {
         return predicate;
     }
 }

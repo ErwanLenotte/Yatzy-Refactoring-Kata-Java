@@ -3,6 +3,7 @@ package kata.yatzy;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static kata.yatzy.YatzyTypeEnum.*;
@@ -96,9 +97,8 @@ public class Yatzy {
     }
 
     private static Integer scoreSumDices(int d2, int d1, int d3, int d4, int d5, YatzySumScoreEnum scoreEnum) {
-        return Stream.of(d1, d2, d3, d4, d5)
-            .filter(scoreEnum.getPredicate())
-            .reduce(DEFAULT_SCORE, Integer::sum);
+        return IntStream.of(d1, d2, d3, d4, d5)
+            .filter(scoreEnum.getPredicate()).sum();
     }
 
     private static Map<Integer, Long> countTallies(int d1, int d2, int d3, int d4, int d5) {
